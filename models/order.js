@@ -4,12 +4,10 @@ const Schema = mongoose.Schema;
 const orderSchema = new Schema({
     username: {
         type: String,
-        unique: true,
-        ref: 'User'
     },
     orderId: {
         type: mongoose.Schema.Types.ObjectId,
-        default: mongoose.Types.ObjectId,
+        default: new mongoose.Types.ObjectId(),
         unique: true
     }
 });

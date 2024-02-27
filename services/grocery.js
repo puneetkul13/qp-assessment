@@ -14,7 +14,7 @@ exports.removeGroceryItem = async(groceryName) => {
         if (!groceryItem) {
           throw new Error("Grocery item not found");
         }
-        await groceryItem.remove();
+        await groceryItem.deleteOne({ groceryName });
         console.log(`Grocery item '${groceryName}' has been removed successfully`);
         return true;
       } catch (error) {
@@ -31,7 +31,11 @@ exports.updateGroceryDetails = async(groceryName, updatedDetails) => {
       if (!groceryItem) {
         throw new Error("Grocery item not found");
       }
-
+      if(updatedDetails.newGroceryName){
+        let name = updatedDetails.newGroceryName
+        delete updatedDetails.newGroceryName
+        updatedDetails.groceryName = name
+      }
       // Update details
       groceryItem.set(updatedDetails);
       await groceryItem.save();
@@ -44,7 +48,7 @@ exports.updateGroceryDetails = async(groceryName, updatedDetails) => {
     }
   }
 
-  exports.manageInventory = async(quantityChange) => {
+  exports.manageInventory = async(groceryName, quantityChange) => {
     try {
       const groceryItem = await groceryModel.findOne({ groceryName });
       if (!groceryItem) {

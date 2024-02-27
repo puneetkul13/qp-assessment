@@ -2,6 +2,7 @@ const groceryModel = require("../models/grocery");
 const userModel = require('../models/user');
 const orderModel = require('../models/order');
 const orderItemModel = require('../models/orderItem');
+const mongoose = require("mongoose");
 
 exports.createOrder = async(username, groceryItems) => {
     try {
@@ -9,10 +10,11 @@ exports.createOrder = async(username, groceryItems) => {
         if (!user) {
           throw new Error("User not found");
         }
-        const order = new orderModel({
-          username: user.username
+        const savedOrder =  new orderModel({
+          username: user.username,
+          orderId: new mongoose.Types.ObjectId()
         });
-        const savedOrder = await order.save();
+        await savedOrder.save()
         const orderItemsPromises = groceryItems.map(async (groceryItem) => {
           const grocery = await groceryModel.findOne({ groceryName: groceryItem.groceryName });
           if(groceryItem.quantity<grocery.quantity){
@@ -20,12 +22,12 @@ exports.createOrder = async(username, groceryItems) => {
                 throw new Error(`Grocery item '${groceryItem.groceryName}' not found`);
               }
       
-              const orderItem = new orderItemModel({
+              const orderItem =  await orderItemModel.create({
                 groceryName: grocery.groceryName,
                 quantity: groceryItem.quantity,
                 orderId: savedOrder._id
               });
-              return orderItem.save();
+              // return orderItem.save();
           }
           else{
             throw new Error(`Grocery item '${groceryItem.groceryName}' quantity should be less than or equal to '${grocery.total}'`);

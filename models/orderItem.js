@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 const orderItemSchema = new Schema({
   groceryName: {
     type: String,
-    unique: true,
     ref: 'Grocery'
   },
   quantity: Number,
