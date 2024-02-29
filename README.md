@@ -2,7 +2,9 @@
 Guide the start the application
 
 clone the repo
-Install all the dependencies using npm install.
+
+Install all the dependencies using npm install
+
 run npm start to run the application
 
 postman curls 
